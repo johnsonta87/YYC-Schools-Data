@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html,
+  body {
+    @apply text-gray-900 bg-white dark:bg-gray-950 dark:text-gray-200 h-screen;
+  }
+
+  body > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .using-mouse * {
+    outline: none !important;
+  }
+
+  button,
+  select {
+    cursor: pointer;
+  }
+}
