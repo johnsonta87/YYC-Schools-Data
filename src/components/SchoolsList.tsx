@@ -16,6 +16,7 @@ interface SchoolsListProps {
   onRetry: () => void
   filters?: FilterOptions
   onAskAi?: (school: SchoolItem) => void
+  onViewMap?: (school: SchoolItem) => void
 }
 
 interface ColumnDefinition {
@@ -262,6 +263,7 @@ export function SchoolsList({
   onRetry,
   filters = {},
   onAskAi,
+  onViewMap,
 }: SchoolsListProps) {
   const schools = useMemo(() => {
     const allSchools = mapSchools(data)
@@ -316,7 +318,7 @@ export function SchoolsList({
   return (
     <ul className="grid lg:grid-cols-2 gap-4">
       {schools.map((school) => (
-        <SchoolItem key={school.id} {...school} onAskAi={onAskAi} />
+        <SchoolItem key={school.id} {...school} onAskAi={onAskAi} onViewMap={onViewMap} />
       ))}
     </ul>
   )

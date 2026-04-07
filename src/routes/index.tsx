@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import { useAction } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import AiDrawer from '../components/AiDrawer'
+import MapDrawer from '../components/Map'
 import { SchoolsList } from '../components/SchoolsList'
 import { SchoolsFilter } from '../components/SchoolsFilter'
 import { useSchools } from '../hooks/useSchools'
@@ -22,6 +23,7 @@ function Home() {
   const { data, error, isLoading, isError, refetch } = useSchools<unknown>()
   const [filters, setFilters] = useState<FilterOptions>({})
   const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false)
+  const [isMapDrawerOpen, setIsMapDrawerOpen] = useState(false)
   const [activeSchool, setActiveSchool] = useState<SchoolItem | null>(null)
   const [aiOutputText, setAiOutputText] = useState('Select a school to ask school-specific questions.')
   const [aiError, setAiError] = useState<string | null>(null)
@@ -38,6 +40,15 @@ function Home() {
   const handleCloseAiDrawer = () => {
     setIsAiDrawerOpen(false)
     setIsAiLoading(false)
+  }
+
+  const handleOpenMapDrawer = (school: SchoolItem) => {
+    setActiveSchool(school)
+    setIsMapDrawerOpen(true)
+  }
+
+  const handleCloseMapDrawer = () => {
+    setIsMapDrawerOpen(false)
   }
 
   const handleSubmitPrompt = async (prompt: string) => {
@@ -115,6 +126,7 @@ function Home() {
             onRetry={refetch}
             filters={filters}
             onAskAi={handleOpenAiDrawer}
+            onViewMap={handleOpenMapDrawer}
           />
         </section>
       </div>
@@ -126,6 +138,11 @@ function Home() {
         isSubmitting={isAiLoading}
         onSubmitPrompt={handleSubmitPrompt}
         onClose={handleCloseAiDrawer}
+      />
+      <MapDrawer
+        isOpen={isMapDrawerOpen}
+        school={activeSchool}
+        onClose={handleCloseMapDrawer}
       />
     </main>
   )

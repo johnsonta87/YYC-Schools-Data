@@ -3,12 +3,18 @@ import type {SchoolItem} from './SchoolsList';
 
 interface SchoolItemProps extends SchoolItem {
   onAskAi?: (school: SchoolItem) => void
+  onViewMap?: (school: SchoolItem) => void
 }
 
 export default function SchoolItem(school: Readonly<SchoolItemProps>) {
   const handleAskAiClick = () => {
-    const { onAskAi, ...schoolData } = school
+    const { onAskAi, onViewMap, ...schoolData } = school
     onAskAi?.(schoolData)
+  }
+
+  const handleViewMapClick = () => {
+    const { onAskAi, onViewMap, ...schoolData } = school
+    onViewMap?.(schoolData)
   }
 
   return (
@@ -47,10 +53,7 @@ export default function SchoolItem(school: Readonly<SchoolItemProps>) {
               <>
                 <button
                   type="button"
-                  onClick={() =>
-                    school.mapUrl &&
-                    window.open(school.mapUrl, '_blank', 'noopener,noreferrer')
-                  }
+                  onClick={handleViewMapClick}
                   className="mt-2 inline-flex py-2 px-4 bg-blue-700 text-white hover:bg-blue-600"
                   title="View on google map"
                 >
