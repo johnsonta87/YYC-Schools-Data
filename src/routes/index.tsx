@@ -10,7 +10,7 @@ import type { FilterOptions } from '../components/SchoolsFilter'
 import type { SchoolItem } from '../components/SchoolsList'
 
 function getInitialAiOutput() {
-  return `I can only answer questions strictly about this school using the details shown in this app.`
+  return `I can only answer questions related to this school.`
 }
 
 export const Route = createFileRoute('/')({

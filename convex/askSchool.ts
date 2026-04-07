@@ -49,7 +49,7 @@ function formatSchoolFacts(school: {
 }
 
 const outOfScopeResponse =
-  "I can only answer questions about the selected school using the details shown in this app. Please ask about this school's contact details, location, grades, board, or other information listed here.";
+  "I can only answer questions about the selected school.";
 
 function getOpenAiApiKey() {
   return (
@@ -97,8 +97,8 @@ export const askSchool = action({
             {
               type: "input_text",
               text:
-                "You are a school information assistant for a Calgary schools app. Answer only using the selected school's facts provided below. Do not use outside knowledge. If the question asks about another school, compares multiple schools, asks for rankings, catchment areas, enrollment, academics, neighborhoods, programs, admissions, or anything not explicitly supported by the provided facts, respond exactly with the out-of-scope response. Keep answers concise, factual, and clearly tied to the selected school.\n\n" +
-                `Out-of-scope response: ${outOfScopeResponse}\n\nSelected school facts:\n${schoolFacts}`,
+                "You are a school information assistant for a Calgary schools app. Do not provide information on unrelated information. Keep answers concise, factual, and clearly tied to the selected school.\n\n" +
+                `Selected school facts:\n${schoolFacts}`,
             },
           ],
         },

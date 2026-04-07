@@ -52,19 +52,19 @@ export default function SchoolItem(school: Readonly<SchoolItemProps>) {
                 school.email
               )}
             </p>
-            <p>
-              {school.mapUrl ? (
-                <a
-                  href={school.mapUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-block text-blue-700 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-                  title="View on google map"
-                >
-                  <Map size={20} />
-                </a>
-              ) : ''}
-            </p>
+            {school.mapUrl && (
+              <button
+                type="button"
+                onClick={() =>
+                  school.mapUrl &&
+                  window.open(school.mapUrl, '_blank', 'noopener,noreferrer')
+                }
+                className="mt-2 inline-flex py-2 px-4 bg-blue-700 text-white hover:bg-blue-600"
+                title="View on google map"
+              >
+                <Map size={20} className="mr-2" /> View map
+              </button>
+            )}
           </div>
         </div>
       </article>
