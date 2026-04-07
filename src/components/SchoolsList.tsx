@@ -323,8 +323,8 @@ export function SchoolsList({
 
   if (schools.length === 0) {
     return (
-      <div className="border border-slate-200 bg-white p-6 text-center text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
-        No schools available for this query.
+      <div className="text-center my-6">
+        No schools available for this filter.
       </div>
     )
   }

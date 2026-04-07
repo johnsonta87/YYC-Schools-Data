@@ -33,7 +33,7 @@ export default function SchoolItem(school: Readonly<SchoolItemProps>) {
             <MessageCircleQuestion size={20} className="mr-2" /> Ask AI
           </button>
         )}
-        <div className="min-w-0 flex-1 pr-16">
+        <div className="min-w-0 flex-1 pr-16 pt-8 sm:pt-0">
           <h3 className="text-md font-semibold">{school.name}</h3>
           <p className="mb-3 text-sm text-gray-700 dark:text-gray-200">
             {school.board}

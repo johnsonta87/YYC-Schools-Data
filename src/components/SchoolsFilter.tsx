@@ -46,6 +46,8 @@ export function SchoolsFilter({
     onFilterChange(emptyFilters)
   }
 
+  const hasActiveFilters = filters.board || (filters.grades && filters.grades.length > 0) || filters.quadrant
+
   return (
     <aside className="flex mb-4 md:mb-0 md:h-screen w-full md:w-72 flex-col gap-6 border border-slate-200 bg-gray-100 dark:bg-gray-900 p-4 md:p-8 dark:border-slate-800">
       <div>
@@ -114,16 +116,13 @@ export function SchoolsFilter({
         </div>
       </div>
 
-      {/* Reset Button */}
-      <div className="mt-auto">
-        <button
-          type="button"
-          onClick={resetFilters}
-          className="w-full rounded-md bg-slate-200 px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-50 dark:hover:bg-slate-600"
-        >
-          Reset Filters
-        </button>
-      </div>
+      {hasActiveFilters && <button
+        type="button"
+        onClick={resetFilters}
+        className="w-full rounded-md bg-slate-200 px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-300 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-slate-50 dark:hover:bg-slate-600 dark:disabled:bg-slate-800 dark:disabled:text-slate-600"
+      >
+        Reset
+      </button>}
     </aside>
   )
 }
