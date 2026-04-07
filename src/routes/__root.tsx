@@ -83,10 +83,10 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <HeadContent />
+        <HeadContent /><title>Calgary schoolsf</title>
       </head>
-      <body className="h-screen overflow-hidden">
-        <div className="flex h-screen flex-col">
+      <body className="md:h-screen md:overflow-hidden">
+        <div className="flex flex-col">
           <Header />
           <div className="flex flex-1 overflow-hidden">
             {children}

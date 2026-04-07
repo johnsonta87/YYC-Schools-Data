@@ -47,7 +47,7 @@ export function SchoolsFilter({
   }
 
   return (
-    <aside className="flex h-screen w-72 flex-col gap-6 border border-slate-200 bg-gray-100 dark:bg-gray-900 p-6 dark:border-slate-800">
+    <aside className="flex mb-4 md:mb-0 md:h-screen w-full md:w-72 flex-col gap-6 border border-slate-200 bg-gray-100 dark:bg-gray-900 p-4 md:p-8 dark:border-slate-800">
       <div>
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">Filters</h2>
       </div>
@@ -62,7 +62,7 @@ export function SchoolsFilter({
             id="board-filter"
             value={filters.board || ''}
             onChange={(e) => handleFilterChange('board', e.target.value)}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50 dark:placeholder-slate-500"
+            className="border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50 dark:placeholder-slate-500"
           >
             <option value="">All</option>
             {boards.map((board) => (
@@ -102,7 +102,7 @@ export function SchoolsFilter({
             id="quadrant-filter"
             value={filters.quadrant || ''}
             onChange={(e) => handleFilterChange('quadrant', e.target.value)}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50 dark:placeholder-slate-500"
+            className="border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50 dark:placeholder-slate-500"
           >
             <option value="">All</option>
             {QUADRANTS.map((quadrant) => (

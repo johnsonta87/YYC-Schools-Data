@@ -15,6 +15,7 @@ interface SchoolsListProps {
   error: Error | null
   onRetry: () => void
   filters?: FilterOptions
+  onAskAi?: (school: SchoolItem) => void
 }
 
 interface ColumnDefinition {
@@ -219,12 +220,12 @@ function mapSchools(rawData: unknown): Array<SchoolItem> {
       board: board || 'Board not listed',
       grades: grades || '-',
       address: address || '',
-      city: city || 'City not listed',
+      city: city || '',
       quadrant,
-      province: province || 'Province not listed',
-      postalCode: postalCode || 'Postal code not listed',
-      phone: phone || 'Phone not listed',
-      email: email || 'Email not listed',
+      province: province || '',
+      postalCode: postalCode || '',
+      phone: phone || 'Not listed',
+      email: email || 'Not listed',
       location,
       mapUrl,
     }
@@ -260,6 +261,7 @@ export function SchoolsList({
   error,
   onRetry,
   filters = {},
+  onAskAi,
 }: SchoolsListProps) {
   const schools = useMemo(() => {
     const allSchools = mapSchools(data)
@@ -312,9 +314,9 @@ export function SchoolsList({
   }
 
   return (
-    <ul className="flex flex-col gap-4">
+    <ul className="grid lg:grid-cols-2 gap-4">
       {schools.map((school) => (
-        <SchoolItem key={school.id} {...school} />
+        <SchoolItem key={school.id} {...school} onAskAi={onAskAi} />
       ))}
     </ul>
   )

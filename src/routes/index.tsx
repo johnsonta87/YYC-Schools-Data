@@ -1,9 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
+import AiDrawer from '../components/AiDrawer'
 import { SchoolsList } from '../components/SchoolsList'
 import { SchoolsFilter } from '../components/SchoolsFilter'
 import { useSchools } from '../hooks/useSchools'
 import type { FilterOptions } from '../components/SchoolsFilter'
+import type { SchoolItem } from '../components/SchoolsList'
 
 export const Route = createFileRoute('/')({
   component: Home,
@@ -12,6 +14,17 @@ export const Route = createFileRoute('/')({
 function Home() {
   const { data, error, isLoading, isError, refetch } = useSchools<unknown>()
   const [filters, setFilters] = useState<FilterOptions>({})
+  const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false)
+  const [activeSchool, setActiveSchool] = useState<SchoolItem | null>(null)
+
+  const handleOpenAiDrawer = (school: SchoolItem) => {
+    setActiveSchool(school)
+    setIsAiDrawerOpen(true)
+  }
+
+  const handleCloseAiDrawer = () => {
+    setIsAiDrawerOpen(false)
+  }
 
   // Extract unique boards from data for filter dropdown
   const { boards } = useMemo(() => {
@@ -33,10 +46,10 @@ function Home() {
   }, [data])
 
   return (
-    <main className="w-full flex h-screen overflow-hidden">
+    <main className="w-full md:flex md:h-screen md:overflow-hidden">
       <SchoolsFilter boards={boards} onFilterChange={setFilters} />
-      <div className="flex-1 overflow-y-auto">
-        <section className="mx-auto w-full max-w-5xl p-8 pt-0">
+      <div className="flex-1 md:overflow-y-auto">
+        <section className="w-full p-4 md:p-8 pt-0">
           <SchoolsList
             data={data}
             isLoading={isLoading}
@@ -44,9 +57,15 @@ function Home() {
             error={error}
             onRetry={refetch}
             filters={filters}
+            onAskAi={handleOpenAiDrawer}
           />
         </section>
       </div>
+      <AiDrawer
+        isOpen={isAiDrawerOpen}
+        schoolName={activeSchool?.name}
+        onClose={handleCloseAiDrawer}
+      />
     </main>
   )
 }

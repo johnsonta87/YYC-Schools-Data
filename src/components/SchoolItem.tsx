@@ -1,14 +1,29 @@
 import { Map } from 'lucide-react';
 import type {SchoolItem} from './SchoolsList';
 
-export default function SchoolItem(school: SchoolItem) {
+interface SchoolItemProps extends SchoolItem {
+  onAskAi?: (school: SchoolItem) => void
+}
+
+export default function SchoolItem(school: SchoolItemProps) {
+  const handleAskAiClick = () => {
+    school.onAskAi?.(school)
+  }
+
   return (
     <li
       key={school.id}
-      className="border-b border-slate-200 py-4 first:pt-0 dark:border-slate-800 last:border-0"
+      className="border-b border-slate-200 py-4 dark:border-slate-800 last:border-0"
     >
-      <article className="flex items-start gap-4">
-        <div className="min-w-0 flex-1">
+      <article className="relative flex items-start gap-4">
+        <button
+          type="button"
+          onClick={handleAskAiClick}
+          className="absolute right-0 top-0 font-bold text-slate-900 hover:underline dark:text-slate-100"
+        >
+          Ask AI
+        </button>
+        <div className="min-w-0 flex-1 pr-16">
           <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
             {school.name}
           </h2>
@@ -16,7 +31,7 @@ export default function SchoolItem(school: SchoolItem) {
             {school.board}
           </p>
 
-          <div className="grid gap-2 text-sm text-slate-700 sm:grid-cols-2 dark:text-slate-200">
+          <div className="text-sm text-slate-700 sm:grid-cols-2 dark:text-slate-200">
             <p>Grades: {school.grades}</p>
             <p>Phone: {school.phone}</p>
             <p>
@@ -36,7 +51,7 @@ export default function SchoolItem(school: SchoolItem) {
                 school.email
               )}
             </p>
-            <p className="sm:col-span-2">
+            <p>
               {school.mapUrl ? (
                 <a
                   href={school.mapUrl}
