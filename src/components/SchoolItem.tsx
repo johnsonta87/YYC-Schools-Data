@@ -1,4 +1,4 @@
-import { Map } from 'lucide-react';
+import { Map, MessageCircleQuestion } from 'lucide-react';
 import type {SchoolItem} from './SchoolsList';
 
 interface SchoolItemProps extends SchoolItem {
@@ -17,22 +17,13 @@ export default function SchoolItem(school: Readonly<SchoolItemProps>) {
       className="border-b border-slate-200 py-4 dark:border-slate-800 last:border-0"
     >
       <article className="relative flex items-start gap-4">
-        <button
-          type="button"
-          onClick={handleAskAiClick}
-          className="absolute right-0 top-0 font-bold text-slate-900 hover:underline dark:text-slate-100"
-        >
-          Ask AI
-        </button>
         <div className="min-w-0 flex-1 pr-16">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-            {school.name}
-          </h2>
-          <p className="mb-3 text-sm text-slate-600 dark:text-slate-300">
+          <h3 className="text-md font-semibold">{school.name}</h3>
+          <p className="mb-3 text-sm text-gray-700 dark:text-gray-200">
             {school.board}
           </p>
 
-          <div className="text-sm text-slate-700 sm:grid-cols-2 dark:text-slate-200">
+          <div className="text-sm sm:grid-cols-2">
             <p>Grades: {school.grades}</p>
             <p>Phone: {school.phone}</p>
             <p>
@@ -53,17 +44,27 @@ export default function SchoolItem(school: Readonly<SchoolItemProps>) {
               )}
             </p>
             {school.mapUrl && (
-              <button
-                type="button"
-                onClick={() =>
-                  school.mapUrl &&
-                  window.open(school.mapUrl, '_blank', 'noopener,noreferrer')
-                }
-                className="mt-2 inline-flex py-2 px-4 bg-blue-700 text-white hover:bg-blue-600"
-                title="View on google map"
-              >
-                <Map size={20} className="mr-2" /> View map
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={() =>
+                    school.mapUrl &&
+                    window.open(school.mapUrl, '_blank', 'noopener,noreferrer')
+                  }
+                  className="mt-2 inline-flex py-2 px-4 bg-blue-700 text-white hover:bg-blue-600"
+                  title="View on google map"
+                >
+                  <Map size={20} className="mr-2" /> View map
+                </button>
+                <button
+                  type="button"
+                  onClick={handleAskAiClick}
+                  className="mt-2 inline-flex py-2 px-4 bg-violet-600 text-white hover:bg-violet-500"
+                  title="Ask AI about this school"
+                >
+                  <MessageCircleQuestion size={20} className="mr-2" /> Ask AI
+                </button>
+              </>
             )}
           </div>
         </div>

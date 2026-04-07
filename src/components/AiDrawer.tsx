@@ -31,6 +31,13 @@ export default function AiDrawer({
     }
   }, [isOpen])
 
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
   const handleSubmit = (event: FormSubmitEvent) => {
     event.preventDefault()
     const trimmedPrompt = prompt.trim()
@@ -43,7 +50,7 @@ export default function AiDrawer({
 
   return (
     <div
-      className={`fixed inset-0 z-40 transition-opacity duration-300 ${
+      className={`fixed inset-0 z-50 transition-opacity duration-300 ${
         isOpen
           ? 'pointer-events-auto opacity-100'
           : 'pointer-events-none opacity-0'
@@ -62,7 +69,7 @@ export default function AiDrawer({
           role="dialog"
           aria-modal="true"
           aria-label="Ask AI"
-          className={`flex h-screen w-full max-w-3xl flex-col bg-white p-4 shadow-2xl transition-transform duration-300 ease-in-out dark:bg-slate-950 ${
+          className={`flex h-screen w-full max-w-3xl flex-col bg-white p-4 shadow-2xl transition-transform duration-300 ease-in-out dark:bg-slate-950 border-l-2 border-gray-400 dark:border-gray-800 ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >

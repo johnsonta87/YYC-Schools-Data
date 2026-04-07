@@ -8,6 +8,7 @@ import * as React from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import appCss from '~/styles/app.css?url'
 import Header from '~/components/Header.tsx'
+import Footer from '~/components/Footer.tsx'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -86,11 +87,12 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
         <HeadContent /><title>Calgary schoolsf</title>
       </head>
       <body className="md:h-screen md:overflow-hidden">
-        <div className="flex flex-col">
+        <div className="flex flex-col md:h-full">
           <Header />
           <div className="flex flex-1 overflow-hidden">
             {children}
           </div>
+          <Footer />
         </div>
         <Scripts />
       </body>
