@@ -441,7 +441,7 @@ export default function MapDrawer({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+              className="p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
               aria-label="Close map panel"
             >
               <X size={20} />
@@ -469,19 +469,21 @@ export default function MapDrawer({
                     onChange={(e) => handleStartingPointChange(e.target.value)}
                     disabled={isLoadingDirections || !mapLoaded}
                     placeholder="Enter starting address"
-                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 disabled:opacity-50"
+                    className="w-full border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 disabled:opacity-50"
                     autoComplete="off"
                   />
                   {showSuggestions && suggestions.length > 0 && (
                     <ul
                       ref={suggestionsRef}
-                      className="absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto rounded-md border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
+                      className="absolute left-0 right-0 top-full z-50 mt-1 max-h-60 overflow-auto border border-slate-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
                     >
                       {suggestions.map((s) => (
                         <li key={s.placeId}>
                           <button
                             type="button"
-                            onMouseDown={() => handleSuggestionSelect(s.description)}
+                            onMouseDown={() =>
+                              handleSuggestionSelect(s.description)
+                            }
                             className="w-full px-3 py-2 text-left text-sm text-slate-800 hover:bg-blue-50 dark:text-slate-200 dark:hover:bg-slate-800"
                           >
                             {s.description}
@@ -499,7 +501,7 @@ export default function MapDrawer({
                   disabled={
                     !startingPoint.trim() || isLoadingDirections || !mapLoaded
                   }
-                  className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50 inline-flex items-center justify-center gap-2"
+                  className="flex-1 bg-blue-700 hover:bg-blue-600 px-4 py-2 text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50 inline-flex items-center justify-center gap-2"
                   title="Get directions"
                 >
                   <Navigation size={18} />
@@ -510,7 +512,7 @@ export default function MapDrawer({
                     type="button"
                     onClick={handleClearDirections}
                     disabled={isLoadingDirections}
-                    className="rounded-md bg-slate-200 px-4 py-2 text-slate-700 transition-colors hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 disabled:opacity-50"
+                    className="bg-slate-200 px-4 py-2 text-slate-700 transition-colors hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 disabled:opacity-50"
                     title="Clear directions"
                   >
                     Clear
@@ -519,7 +521,7 @@ export default function MapDrawer({
               </div>
 
               {directionsError && (
-                <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+                <div className="border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
                   {directionsError}
                 </div>
               )}

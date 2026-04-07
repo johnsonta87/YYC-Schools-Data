@@ -82,19 +82,19 @@ export default function AiDrawer({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
+              className="p-2 text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800"
               aria-label="Close Ask AI panel"
             >
               <X size={20} />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto rounded-md border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-200">
+          <div className="flex-1 overflow-y-auto border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/50 dark:text-slate-200">
             <p className="whitespace-pre-wrap">
               {isSubmitting ? 'Thinking…' : outputText}
             </p>
             {errorText ? (
-              <p className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+              <p className="mt-3 border border-red-200 bg-red-50 px-3 py-2 text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
                 {errorText}
               </p>
             ) : null}
@@ -115,12 +115,12 @@ export default function AiDrawer({
                     ? `Ask about ${schoolName}`
                     : 'Ask about this school...'
                 }
-                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                className="w-full border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               />
               <button
                 type="submit"
                 disabled={!prompt.trim() || isSubmitting || !schoolName}
-                className="rounded-md bg-blue-600 p-2 text-white transition-colors hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
+                className="bg-blue-700 hover:bg-blue-600 p-2 text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Submit prompt"
                 title="Submit"
               >

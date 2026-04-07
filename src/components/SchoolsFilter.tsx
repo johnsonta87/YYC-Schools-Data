@@ -87,7 +87,7 @@ export function SchoolsFilter({
                   type="checkbox"
                   checked={filters.grades?.includes(grade) || false}
                   onChange={() => handleGradesChange(grade)}
-                  className="rounded border border-slate-300 dark:border-slate-600"
+                  className="border border-slate-300 dark:border-slate-600"
                 />
                 <span className="text-sm text-slate-700 dark:text-slate-200">{grade}</span>
               </label>
@@ -119,7 +119,7 @@ export function SchoolsFilter({
       {hasActiveFilters && <button
         type="button"
         onClick={resetFilters}
-        className="w-full rounded-md bg-slate-200 px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-300 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-slate-50 dark:hover:bg-slate-600 dark:disabled:bg-slate-800 dark:disabled:text-slate-600"
+        className="w-full bg-slate-200 px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-300 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed dark:bg-slate-700 dark:text-slate-50 dark:hover:bg-slate-600 dark:disabled:bg-slate-800 dark:disabled:text-slate-600"
       >
         Reset
       </button>}
