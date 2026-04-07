@@ -12,7 +12,7 @@ interface SchoolsFilterProps {
 }
 
 const QUADRANTS = ['NE', 'NW', 'SE', 'SW'] as const
-const GRADES = ['Elementary', 'Junior High', 'Senior High'] as const
+const GRADES = ['Elementary', 'Junior High', 'Senior High', 'University', 'College'] as const
 
 export function SchoolsFilter({
   onFilterChange,

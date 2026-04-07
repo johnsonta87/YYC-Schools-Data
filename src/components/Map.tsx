@@ -1,6 +1,7 @@
 import { Navigation, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import type { SchoolItem } from './SchoolsList'
+import { SNAZZY_STYLE } from '~/styles/snazzyStyle.ts'
 
 type FormSubmitEvent = React.SyntheticEvent<HTMLFormElement>
 
@@ -104,7 +105,7 @@ export default function MapDrawer({
 
   // Initialize Places AutocompleteService once the Maps API is ready
   useEffect(() => {
-    if (mapLoaded && window.google?.maps?.places) {
+    if (mapLoaded && window.google?.maps.places) {
       try {
         autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService()
         sessionTokenRef.current = new window.google.maps.places.AutocompleteSessionToken()
@@ -116,7 +117,7 @@ export default function MapDrawer({
       console.warn('Google Maps Places API not available yet', {
         mapLoaded,
         hasGoogle: !!window.google,
-        hasPlaces: !!window.google?.maps?.places,
+        hasPlaces: !!window.google?.maps.places,
       })
     }
   }, [mapLoaded])
@@ -157,12 +158,12 @@ export default function MapDrawer({
         mapTypeControl: true,
         fullscreenControl: true,
         streetViewControl: true,
-        styles: getMapStyles(),
+        styles: SNAZZY_STYLE,
       })
     } else {
       // School changed — re-center, clear any existing route and reset form
       mapInstanceRef.current.setCenter({ lat: schoolLat, lng: schoolLng })
-      mapInstanceRef.current.setZoom(14)
+      mapInstanceRef.current.setZoom(16)
       if (routePolylineRef.current) {
         routePolylineRef.current.setMap(null)
         routePolylineRef.current = null
@@ -211,34 +212,6 @@ export default function MapDrawer({
     const match = /,\s*([-\d.]+)$/.exec(location)
     return match ? Number.parseFloat(match[1]) : null
   }
-
-  const getMapStyles = () => [
-    {
-      featureType: 'all',
-      elementType: 'labels.text.fill',
-      stylers: [{ color: '#1f2937' }],
-    },
-    {
-      featureType: 'road',
-      elementType: 'geometry.fill',
-      stylers: [{ color: '#f0f0f0' }],
-    },
-    {
-      featureType: 'road',
-      elementType: 'geometry.stroke',
-      stylers: [{ color: '#d0d0d0' }],
-    },
-    {
-      featureType: 'water',
-      elementType: 'geometry.fill',
-      stylers: [{ color: '#dbeef6' }],
-    },
-    {
-      featureType: 'poi',
-      elementType: 'geometry.fill',
-      stylers: [{ color: '#ffeee0' }],
-    },
-  ]
 
   const handleStartingPointChange = (value: string) => {
     setStartingPoint(value)
@@ -422,7 +395,7 @@ export default function MapDrawer({
       const schoolLng = extractLongitude(school.location)
       if (schoolLat !== null && schoolLng !== null) {
         mapInstanceRef.current.setCenter({ lat: schoolLat, lng: schoolLng })
-        mapInstanceRef.current.setZoom(14)
+        mapInstanceRef.current.setZoom(16)
       }
     }
   }
@@ -486,7 +459,7 @@ export default function MapDrawer({
                   htmlFor="starting-point"
                   className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
                 >
-                  Starting Point (Address or Coordinates)
+                  Starting Point
                 </label>
                 <div className="relative">
                   <input
@@ -495,7 +468,7 @@ export default function MapDrawer({
                     value={startingPoint}
                     onChange={(e) => handleStartingPointChange(e.target.value)}
                     disabled={isLoadingDirections || !mapLoaded}
-                    placeholder="Enter starting address or coordinates"
+                    placeholder="Enter starting address"
                     className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 disabled:opacity-50"
                     autoComplete="off"
                   />
@@ -553,7 +526,6 @@ export default function MapDrawer({
 
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 💡 Tip: You can enter an address (e.g., "123 Main St, Calgary")
-                or coordinates (e.g., "51.0456, -114.0575")
               </p>
             </div>
           </form>

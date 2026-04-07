@@ -23,6 +23,16 @@ export default function SchoolItem(school: Readonly<SchoolItemProps>) {
       className="border-b border-slate-200 py-4 dark:border-slate-800 last:border-0"
     >
       <article className="relative flex items-start gap-4">
+        {school.mapUrl && (
+          <button
+            type="button"
+            onClick={handleAskAiClick}
+            className="absolute right-0 top-0 inline-flex items-center px-4 py-2 text-violet-700 dark:text-violet-500 hover:text-violet-400 transition-colors"
+            title="Ask AI about this school"
+          >
+            <MessageCircleQuestion size={20} className="mr-2" /> Ask AI
+          </button>
+        )}
         <div className="min-w-0 flex-1 pr-16">
           <h3 className="text-md font-semibold">{school.name}</h3>
           <p className="mb-3 text-sm text-gray-700 dark:text-gray-200">
@@ -50,24 +60,14 @@ export default function SchoolItem(school: Readonly<SchoolItemProps>) {
               )}
             </p>
             {school.mapUrl && (
-              <>
-                <button
-                  type="button"
-                  onClick={handleViewMapClick}
-                  className="mt-2 inline-flex py-2 px-4 bg-blue-700 text-white hover:bg-blue-600"
-                  title="View on google map"
-                >
-                  <Map size={20} className="mr-2" /> View map
-                </button>
-                <button
-                  type="button"
-                  onClick={handleAskAiClick}
-                  className="mt-2 inline-flex py-2 px-4 bg-violet-600 text-white hover:bg-violet-500"
-                  title="Ask AI about this school"
-                >
-                  <MessageCircleQuestion size={20} className="mr-2" /> Ask AI
-                </button>
-              </>
+              <button
+                type="button"
+                onClick={handleViewMapClick}
+                className="mt-2 inline-flex bg-blue-700 px-4 py-2 text-white hover:bg-blue-600"
+                title="View on google map"
+              >
+                <Map size={20} className="mr-2" /> View map
+              </button>
             )}
           </div>
         </div>

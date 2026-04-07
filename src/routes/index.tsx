@@ -117,7 +117,7 @@ function Home() {
     <main className="w-full md:flex md:h-full md:overflow-hidden">
       <SchoolsFilter boards={boards} onFilterChange={setFilters} />
       <div className="flex-1 md:overflow-y-auto">
-        <section className="w-full p-4 md:p-8 pt-0">
+        <section className="w-full p-4 md:p-8 md:pt-0">
           <SchoolsList
             data={data}
             isLoading={isLoading}

@@ -118,6 +118,15 @@ function asText(value: unknown): string {
   return ''
 }
 
+function formatPostalCode(value: string): string {
+  const compact = value.replace(/\s+/g, '')
+  if (compact.length <= 3) {
+    return compact
+  }
+
+  return `${compact.slice(0, 3)} ${compact.slice(3)}`
+}
+
 function pickValue(record: UnknownRecord, aliases: ReadonlyArray<string>): string {
   const entryMap = new Map<string, unknown>()
   Object.entries(record).forEach(([key, value]) => {
@@ -197,6 +206,8 @@ function getQuadrantFromAddress(address: string): string {
   return match ? normalizeQuadrant(match[1]) : ''
 }
 
+const NAME_MATCH_GRADES = new Set(['university', 'college'])
+
 function mapSchools(rawData: unknown): Array<SchoolItem> {
   const rows = extractRows(rawData)
 
@@ -208,7 +219,7 @@ function mapSchools(rawData: unknown): Array<SchoolItem> {
     const quadrant = getQuadrantFromAddress(address)
     const city = pickValue(record, FIELD_ALIASES.city)
     const province = pickValue(record, FIELD_ALIASES.province)
-    const postalCode = pickValue(record, FIELD_ALIASES.postalCode)
+    const postalCode = formatPostalCode(pickValue(record, FIELD_ALIASES.postalCode))
     const phone = pickValue(record, FIELD_ALIASES.phone)
     const email = pickValue(record, FIELD_ALIASES.email)
     const point = pickRawValue(record, FIELD_ALIASES.point)
@@ -274,8 +285,11 @@ export function SchoolsList({
       }
       if (filters.grades && filters.grades.length > 0) {
         const schoolGradesLower = school.grades.toLowerCase()
+        const schoolNameLower = school.name.toLowerCase()
         const matchesGrade = filters.grades.some((grade) =>
-          schoolGradesLower.includes(grade.toLowerCase())
+          NAME_MATCH_GRADES.has(grade.toLowerCase())
+            ? schoolNameLower.includes(grade.toLowerCase())
+            : schoolGradesLower.includes(grade.toLowerCase())
         )
         if (!matchesGrade) {
           return false
