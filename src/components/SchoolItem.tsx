@@ -5,9 +5,10 @@ interface SchoolItemProps extends SchoolItem {
   onAskAi?: (school: SchoolItem) => void
 }
 
-export default function SchoolItem(school: SchoolItemProps) {
+export default function SchoolItem(school: Readonly<SchoolItemProps>) {
   const handleAskAiClick = () => {
-    school.onAskAi?.(school)
+    const { onAskAi, ...schoolData } = school
+    onAskAi?.(schoolData)
   }
 
   return (

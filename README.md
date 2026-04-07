@@ -6,6 +6,7 @@ A web app that displays a browsable, filterable list of Calgary schools sourced 
 
 - 📋 Lists Calgary schools with name, board, grades served, address, phone, email, and a Google Maps link
 - 🔍 Filter by **school board**, **grades** (Elementary / Junior High / Senior High), and **city quadrant** (NE / NW / SE / SW)
+- 🤖 School-specific **Ask AI** drawer that answers only from the selected school's displayed details
 - 🌙 Light / dark mode toggle
 - ⚡ Built with React 19, TanStack Router, TanStack Query, Tailwind CSS v4, and Vite
 
@@ -43,6 +44,9 @@ Create a `.env.local` file in the project root:
 ```env
 # Optional – increases the rate limit for the Calgary Open Data API
 VITE_CALGARY_APP_TOKEN=your_app_token_here
+
+# Required for the Ask AI drawer
+OPENAI_API_KEY=your_openai_api_key_here
 ```
 
 ### Running the App
