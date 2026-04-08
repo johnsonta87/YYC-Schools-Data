@@ -99,7 +99,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
-        <title>Calgary schoolsf</title>
+        <title>Find Calgary schools</title>
       </head>
       <body className="md:h-screen md:overflow-hidden">
         <div className="flex flex-col md:h-full">

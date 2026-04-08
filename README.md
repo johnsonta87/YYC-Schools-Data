@@ -45,6 +45,12 @@ Create a `.env.local` file in the project root:
 # Optional – increases the rate limit for the Calgary Open Data API
 VITE_CALGARY_APP_TOKEN=your_app_token_here
 
+# Required in the browser for Google Maps JavaScript + Places Autocomplete
+VITE_GOOGLE_MAPS_API_KEY=your_browser_restricted_maps_key_here
+
+# Required on the Convex backend for Routes API (not exposed to the client)
+GOOGLE_ROUTES_API_KEY=your_server_routes_key_here
+
 # Required for the Ask AI drawer
 OPENAI_API_KEY=your_openai_api_key_here
 ```

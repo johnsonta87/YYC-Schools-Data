@@ -1,7 +1,9 @@
 import { Navigation, X } from 'lucide-react'
+import { useAction } from 'convex/react'
 import { useEffect, useRef, useState } from 'react'
 import type { SchoolItem } from './SchoolsList'
 import { SNAZZY_STYLE } from '~/styles/snazzyStyle.ts'
+import { api } from '../../convex/_generated/api'
 
 type FormSubmitEvent = React.SyntheticEvent<HTMLFormElement>
 
@@ -68,6 +70,7 @@ export default function MapDrawer({
   school,
   onClose,
 }: Readonly<MapDrawerProps>) {
+  const computeRoute = useAction(api.routes.computeRoute)
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
   const schoolMarkerRef = useRef<any>(null)
@@ -304,37 +307,12 @@ export default function MapDrawer({
     setIsLoadingDirections(true)
 
     try {
-      const response = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Goog-Api-Key': GOOGLE_MAPS_API_KEY,
-          'X-Goog-FieldMask': 'routes.polyline.encodedPolyline,routes.legs.startLocation,routes.legs.endLocation',
-        },
-        body: JSON.stringify({
-          origin: { address: startingPoint },
-          destination: {
-            location: {
-              latLng: { latitude: schoolLat, longitude: schoolLng },
-            },
-          },
-          travelMode: 'DRIVE',
-        }),
+      const route = await computeRoute({
+        originAddress: startingPoint,
+        destinationLat: schoolLat,
+        destinationLng: schoolLng,
       })
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}))
-        throw new Error(err?.error?.message ?? `Routes API error: ${response.statusText}`)
-      }
-
-      const data = await response.json()
-
-      if (!data.routes || data.routes.length === 0) {
-        throw new Error('No route found. Please check your starting point.')
-      }
-
-      const route = data.routes[0]
-      const path = decodePolyline(route.polyline.encodedPolyline)
+      const path = decodePolyline(route.encodedPolyline)
 
       if (!window.google) throw new Error('Google Maps API not available')
 
@@ -352,10 +330,8 @@ export default function MapDrawer({
       })
 
       // Origin marker (green)
-      const startLat: number = route.legs[0].startLocation.latLng.latitude
-      const startLng: number = route.legs[0].startLocation.latLng.longitude
       originMarkerRef.current = new window.google.maps.Marker({
-        position: { lat: startLat, lng: startLng },
+        position: { lat: route.startLat, lng: route.startLng },
         map: mapInstanceRef.current,
         title: 'Starting point',
         icon: {

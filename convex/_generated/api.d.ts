@@ -9,6 +9,7 @@
  */
 
 import type * as askSchool from "../askSchool.js";
+import type * as routes from "../routes.js";
 
 import type {
   ApiFromModules,
@@ -18,6 +19,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   askSchool: typeof askSchool;
+  routes: typeof routes;
 }>;
 
 /**
