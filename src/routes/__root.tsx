@@ -10,6 +10,7 @@ import type { QueryClient } from '@tanstack/react-query'
 import appCss from '~/styles/app.css?url'
 import Footer from '~/components/Footer.tsx'
 import ThemeSwitcher from '~/components/ThemeSwitcher.tsx'
+import { Analytics } from '@vercel/analytics/next'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -103,6 +104,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
       </head>
       <body className="md:h-screen md:overflow-hidden">
         <div className="flex flex-col md:h-full">
+          <Analytics />
           <ThemeSwitcher />
           <div className="flex flex-1 overflow-hidden">{children}</div>
           <Footer />
