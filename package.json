@@ -3,6 +3,7 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "author": "Johnson Ta",
   "scripts": {
     "dev": "npx convex dev --once && concurrently -r npm:dev:web npm:dev:convex",
     "dev:web": "vite dev",
@@ -23,6 +24,7 @@
     "convex": "^1.33.1",
     "lucide-react": "^1.7.0",
     "openai": "^6.33.0",
+    "nitro": "^3.0.260311-beta",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },

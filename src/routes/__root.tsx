@@ -5,11 +5,11 @@ import {
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 import * as React from 'react'
+import NotFoundPage from './404'
 import type { QueryClient } from '@tanstack/react-query'
 import appCss from '~/styles/app.css?url'
 import Footer from '~/components/Footer.tsx'
 import ThemeSwitcher from '~/components/ThemeSwitcher.tsx'
-import NotFoundPage from './404'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
