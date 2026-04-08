@@ -20,7 +20,7 @@ export default function SchoolItem(school: Readonly<SchoolItemProps>) {
   return (
     <li
       key={school.id}
-      className="border p-4 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
+      className="border p-4 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 transition-all"
     >
       <article className="relative flex items-start gap-4">
         <div className="min-w-0 flex-1">
