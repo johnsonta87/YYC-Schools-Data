@@ -1,11 +1,12 @@
 import { Navigation, X } from 'lucide-react'
 import { useAction } from 'convex/react'
 import { useEffect, useRef, useState } from 'react'
+import { api } from '../../convex/_generated/api'
 import type { SchoolItem } from './SchoolsList'
 import { SNAZZY_STYLE } from '~/styles/snazzyStyle.ts'
-import { api } from '../../convex/_generated/api'
 
 type FormSubmitEvent = React.SyntheticEvent<HTMLFormElement>
+type PlaceSuggestion = { placeId: string; description: string }
 
 interface MapDrawerProps {
   isOpen: boolean
@@ -18,11 +19,16 @@ declare global {
     google?: {
       maps: {
         Map: any
-        Marker: any
         Polyline: any
         LatLngBounds: any
-        SymbolPath: any
+        marker: {
+          AdvancedMarkerElement: any
+          PinElement: any
+        }
         places: {
+          AutocompleteSuggestion?: {
+            fetchAutocompleteSuggestions: (request: any) => Promise<any>
+          }
           AutocompleteService: any
           AutocompleteSessionToken: any
         }
@@ -32,6 +38,7 @@ declare global {
 }
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+const GOOGLE_MAP_ID = import.meta.env.VITE_GOOGLE_MAP_ID || 'DEMO_MAP_ID'
 
 // Decode a Google encoded polyline into lat/lng pairs
 function decodePolyline(encoded: string): Array<{ lat: number; lng: number }> {
@@ -65,6 +72,25 @@ function decodePolyline(encoded: string): Array<{ lat: number; lng: number }> {
   return points
 }
 
+function clearAdvancedMarker(markerRef: { current: any }) {
+  if (markerRef.current) {
+    markerRef.current.map = null
+    markerRef.current = null
+  }
+}
+
+function createColoredPinElement(background: string, border: string) {
+  if (!window.google?.maps.marker.PinElement) return null
+
+  const pin = new window.google.maps.marker.PinElement({
+    background,
+    borderColor: border,
+    glyphColor: '#ffffff',
+  })
+
+  return pin.element
+}
+
 export default function MapDrawer({
   isOpen,
   school,
@@ -76,12 +102,12 @@ export default function MapDrawer({
   const schoolMarkerRef = useRef<any>(null)
   const routePolylineRef = useRef<any>(null)
   const originMarkerRef = useRef<any>(null)
-  const autocompleteServiceRef = useRef<any>(null)
+  const legacyAutocompleteServiceRef = useRef<any>(null)
   const sessionTokenRef = useRef<any>(null)
   const suggestionDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const suggestionsRef = useRef<HTMLUListElement>(null)
   const [startingPoint, setStartingPoint] = useState('')
-  const [suggestions, setSuggestions] = useState<Array<{ placeId: string; description: string }>>([])
+  const [suggestions, setSuggestions] = useState<Array<PlaceSuggestion>>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [isLoadingDirections, setIsLoadingDirections] = useState(false)
   const [directionsError, setDirectionsError] = useState<string | null>(null)
@@ -92,7 +118,7 @@ export default function MapDrawer({
     if (mapLoaded) return
 
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,marker&loading=async`
     script.async = true
     script.onload = () => { setMapLoaded(true) }
     script.onerror = () => {
@@ -106,17 +132,16 @@ export default function MapDrawer({
     }
   }, [mapLoaded])
 
-  // Initialize Places AutocompleteService once the Maps API is ready
+  // Initialize Places autocomplete helpers once the Maps API is ready
   useEffect(() => {
     if (mapLoaded && window.google?.maps.places) {
       try {
-        autocompleteServiceRef.current = new window.google.maps.places.AutocompleteService()
         sessionTokenRef.current = new window.google.maps.places.AutocompleteSessionToken()
-        console.log('AutocompleteService initialized successfully')
+
       } catch (error) {
-        console.error('Failed to initialize AutocompleteService:', error)
+        console.error('Failed to initialize Places autocomplete helpers:', error)
       }
-    } else {
+    } else if (mapLoaded) {
       console.warn('Google Maps Places API not available yet', {
         mapLoaded,
         hasGoogle: !!window.google,
@@ -134,6 +159,12 @@ export default function MapDrawer({
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (suggestionDebounceRef.current) clearTimeout(suggestionDebounceRef.current)
+    }
   }, [])
 
   // Initialize or update map when drawer opens or school changes
@@ -158,6 +189,7 @@ export default function MapDrawer({
       mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
         zoom: 14,
         center: { lat: schoolLat, lng: schoolLng },
+        mapId: GOOGLE_MAP_ID,
         mapTypeControl: true,
         fullscreenControl: true,
         streetViewControl: true,
@@ -172,8 +204,7 @@ export default function MapDrawer({
         routePolylineRef.current = null
       }
       if (originMarkerRef.current) {
-        originMarkerRef.current.setMap(null)
-        originMarkerRef.current = null
+        clearAdvancedMarker(originMarkerRef)
       }
       setStartingPoint('')
       setDirectionsError(null)
@@ -181,20 +212,13 @@ export default function MapDrawer({
 
     // Remove old school marker and place a fresh one
     if (schoolMarkerRef.current) {
-      schoolMarkerRef.current.setMap(null)
+      clearAdvancedMarker(schoolMarkerRef)
     }
-    schoolMarkerRef.current = new window.google.maps.Marker({
+    schoolMarkerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
       position: { lat: schoolLat, lng: schoolLng },
       map: mapInstanceRef.current,
       title: school.name,
-      icon: {
-        path: window.google.maps.SymbolPath.CIRCLE,
-        scale: 10,
-        fillColor: '#2563eb',
-        fillOpacity: 1,
-        strokeColor: '#ffffff',
-        strokeWeight: 2,
-      },
+      content: createColoredPinElement('#2563eb', '#ffffff'),
     })
   }, [isOpen, mapLoaded, school])
 
@@ -216,51 +240,92 @@ export default function MapDrawer({
     return match ? Number.parseFloat(match[1]) : null
   }
 
+  const mapAutocompleteSuggestions = (rawSuggestions: Array<any>): Array<PlaceSuggestion> => {
+    return rawSuggestions
+      .map((item: any) => {
+        const prediction = item?.placePrediction
+        const description =
+          prediction?.text?.toString?.() ??
+          prediction?.text?.text ??
+          prediction?.mainText?.toString?.() ??
+          prediction?.description
+        const placeId = prediction?.placeId ?? prediction?.place_id
+
+        if (!description || !placeId) return null
+        return { description, placeId }
+      })
+      .filter((item: PlaceSuggestion | null): item is PlaceSuggestion => item !== null)
+  }
+
+  const fetchLegacyAutocompleteSuggestions = (value: string) => {
+    if (!legacyAutocompleteServiceRef.current && window.google?.maps.places.AutocompleteService) {
+      legacyAutocompleteServiceRef.current = new window.google.maps.places.AutocompleteService()
+    }
+
+    const service = legacyAutocompleteServiceRef.current
+    if (!service) return
+
+    const requestOptions: any = {
+      input: value,
+      componentRestrictions: { country: 'ca' },
+    }
+
+    if (sessionTokenRef.current) {
+      requestOptions.sessionToken = sessionTokenRef.current
+    }
+
+    service.getPlacePredictions(requestOptions, (predictions: any, status: string) => {
+      if (status === 'OK' && predictions?.length) {
+        setSuggestions(
+          predictions.map((p: any) => ({ placeId: p.place_id, description: p.description }))
+        )
+        setShowSuggestions(true)
+      } else {
+        setSuggestions([])
+        setShowSuggestions(false)
+      }
+    })
+  }
+
   const handleStartingPointChange = (value: string) => {
     setStartingPoint(value)
 
     if (suggestionDebounceRef.current) clearTimeout(suggestionDebounceRef.current)
 
-    if (value.length < 3 || !autocompleteServiceRef.current) {
+    if (value.length < 3) {
       setSuggestions([])
       setShowSuggestions(false)
       return
     }
 
-    suggestionDebounceRef.current = setTimeout(() => {
+    suggestionDebounceRef.current = setTimeout(async () => {
       try {
-        if (!autocompleteServiceRef.current) {
-          console.warn('AutocompleteService not available')
-          return
-        }
-
-        const requestOptions: any = {
-          input: value,
-          componentRestrictions: { country: 'ca' },
-        }
-
-        if (sessionTokenRef.current) {
-          requestOptions.sessionToken = sessionTokenRef.current
-        }
-
-        autocompleteServiceRef.current.getPlacePredictions(
-          requestOptions,
-          (predictions: any, status: string) => {
-            if (status === 'OK' && predictions?.length) {
-              setSuggestions(
-                predictions.map((p: any) => ({ placeId: p.place_id, description: p.description }))
-              )
-              setShowSuggestions(true)
-            } else {
-              setSuggestions([])
-              setShowSuggestions(false)
-            }
+        const suggestionApi = window.google?.maps.places.AutocompleteSuggestion
+        if (suggestionApi?.fetchAutocompleteSuggestions) {
+          const requestOptions: any = {
+            input: value,
+            includedRegionCodes: ['ca'],
           }
-        )
+
+          if (sessionTokenRef.current) {
+            requestOptions.sessionToken = sessionTokenRef.current
+          }
+
+          const response = await suggestionApi.fetchAutocompleteSuggestions(requestOptions)
+          const mappedSuggestions = mapAutocompleteSuggestions(response?.suggestions ?? [])
+
+          if (mappedSuggestions.length > 0) {
+            setSuggestions(mappedSuggestions)
+            setShowSuggestions(true)
+            return
+          }
+        }
+
+        // Fallback for projects where the new API is unavailable or returns no usable predictions.
+        fetchLegacyAutocompleteSuggestions(value)
       } catch (error) {
         console.error('Error fetching autocomplete suggestions:', error)
-        setSuggestions([])
-        setShowSuggestions(false)
+        fetchLegacyAutocompleteSuggestions(value)
       }
     }, 300)
   }
@@ -277,8 +342,7 @@ export default function MapDrawer({
       routePolylineRef.current = null
     }
     if (originMarkerRef.current) {
-      originMarkerRef.current.setMap(null)
-      originMarkerRef.current = null
+      clearAdvancedMarker(originMarkerRef)
     }
   }
 
@@ -330,18 +394,11 @@ export default function MapDrawer({
       })
 
       // Origin marker (green)
-      originMarkerRef.current = new window.google.maps.Marker({
+      originMarkerRef.current = new window.google.maps.marker.AdvancedMarkerElement({
         position: { lat: route.startLat, lng: route.startLng },
         map: mapInstanceRef.current,
         title: 'Starting point',
-        icon: {
-          path: window.google.maps.SymbolPath.CIRCLE,
-          scale: 8,
-          fillColor: '#16a34a',
-          fillOpacity: 1,
-          strokeColor: '#ffffff',
-          strokeWeight: 2,
-        },
+        content: createColoredPinElement('#16a34a', '#ffffff'),
       })
 
       // Fit map to the full route

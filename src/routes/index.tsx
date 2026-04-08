@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useAction } from 'convex/react'
 import { useMemo, useState } from 'react'
-import type { Message } from '~/components/AiDrawer.tsx'
 import { api } from '../../convex/_generated/api'
+import type { Message } from '~/components/AiDrawer.tsx'
 import type {FilterOptions, SchoolItem} from '~/components/SchoolsList.tsx';
 import { SchoolsList } from '~/components/SchoolsList.tsx'
 import { useSchools } from '~/hooks/useSchools.ts'
