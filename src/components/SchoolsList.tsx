@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SchoolItem from './SchoolItem'
 
 export interface FilterOptions {
@@ -207,6 +207,7 @@ function getQuadrantFromAddress(address: string): string {
 }
 
 const NAME_MATCH_GRADES = new Set(['university', 'college'])
+const ITEMS_PER_PAGE = 6
 
 function mapSchools(rawData: unknown): Array<SchoolItem> {
   const rows = extractRows(rawData)
@@ -276,6 +277,8 @@ export function SchoolsList({
   onAskAi,
   onViewMap,
 }: SchoolsListProps) {
+  const [currentPage, setCurrentPage] = useState(1)
+
   const schools = useMemo(() => {
     const allSchools = mapSchools(data)
 
@@ -301,6 +304,15 @@ export function SchoolsList({
       return true
     })
   }, [data, filters])
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [data, filters])
+
+  const totalPages = Math.max(1, Math.ceil(schools.length / ITEMS_PER_PAGE))
+  const safePage = Math.min(currentPage, totalPages)
+  const startIndex = (safePage - 1) * ITEMS_PER_PAGE
+  const paginatedSchools = schools.slice(startIndex, startIndex + ITEMS_PER_PAGE)
 
   if (isLoading) {
     return <LoadingCards />
@@ -330,11 +342,43 @@ export function SchoolsList({
   }
 
   return (
-    <ul className="grid lg:grid-cols-2 gap-4">
-      {schools.map((school) => (
-        <SchoolItem key={school.id} {...school} onAskAi={onAskAi} onViewMap={onViewMap} />
-      ))}
-    </ul>
+    <div className="mt-8 space-y-4">
+      <p className="text-sm text-slate-600 dark:text-slate-300">
+        Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, schools.length)} of {schools.length} schools
+      </p>
+
+      <ul className="grid gap-4 lg:grid-cols-2">
+        {paginatedSchools.map((school) => (
+          <SchoolItem key={school.id} {...school} onAskAi={onAskAi} onViewMap={onViewMap} />
+        ))}
+      </ul>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+            disabled={safePage === 1}
+            className="border border-slate-300 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700"
+          >
+            Previous
+          </button>
+
+          <span className="text-sm text-slate-700 dark:text-slate-200">
+            Page {safePage} of {totalPages}
+          </span>
+
+          <button
+            type="button"
+            onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+            disabled={safePage === totalPages}
+            className="border border-slate-300 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700"
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
   )
 }
 

@@ -5,6 +5,7 @@
 @layer base {
   html,
   body {
+    font-family: 'Space Grotesk', 'Space Grotesk Fallback', sans-serif;
     @apply text-gray-900 bg-white dark:bg-gray-950 dark:text-gray-200 h-screen;
   }
 

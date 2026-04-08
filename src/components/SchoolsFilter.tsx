@@ -51,10 +51,11 @@ export function SchoolsFilter({
   return (
     <aside className="flex mb-4 md:mb-0 md:h-screen w-full md:w-72 flex-col gap-6 border border-slate-200 bg-gray-100 dark:bg-gray-900 p-4 md:p-8 dark:border-slate-800">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">Filters</h2>
+        <h1 className="text-2xl font-semibold">Find Calgary Schools</h1>
       </div>
 
       <div className="flex flex-col gap-4 overflow-y-auto">
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">Filters</h2>
         {/* Board Filter */}
         <div className="flex flex-col gap-2">
           <label htmlFor="board-filter" className="text-sm font-medium text-slate-700 dark:text-slate-200">

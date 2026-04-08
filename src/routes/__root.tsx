@@ -7,8 +7,9 @@ import {
 import * as React from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import appCss from '~/styles/app.css?url'
-import Header from '~/components/Header.tsx'
 import Footer from '~/components/Footer.tsx'
+import ThemeSwitcher from '~/components/ThemeSwitcher.tsx'
+import NotFoundPage from './404'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -27,6 +28,19 @@ export const Route = createRootRouteWithContext<{
       },
     ],
     links: [
+      {
+        rel: 'preconnect',
+        href: 'https://fonts.googleapis.com',
+      },
+      {
+        rel: 'preconnect',
+        href: 'https://fonts.gstatic.com',
+        crossOrigin: 'anonymous',
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap',
+      },
       { rel: 'stylesheet', href: appCss },
       {
         rel: 'apple-touch-icon',
@@ -49,7 +63,7 @@ export const Route = createRootRouteWithContext<{
       { rel: 'icon', href: '/favicon.ico' },
     ],
   }),
-  notFoundComponent: () => <div>Route not found</div>,
+  notFoundComponent: NotFoundPage,
   component: RootComponent,
 })
 
@@ -72,7 +86,7 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
     } else if (theme === 'light') {
       root.classList.remove('dark')
     } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      const prefersDark = globalThis.matchMedia('(prefers-color-scheme: dark)').matches
       if (prefersDark) {
         root.classList.add('dark')
       } else {
@@ -84,14 +98,13 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
-        <HeadContent /><title>Calgary schoolsf</title>
+        <HeadContent />
+        <title>Calgary schoolsf</title>
       </head>
       <body className="md:h-screen md:overflow-hidden">
         <div className="flex flex-col md:h-full">
-          <Header />
-          <div className="flex flex-1 overflow-hidden">
-            {children}
-          </div>
+          <ThemeSwitcher />
+          <div className="flex flex-1 overflow-hidden">{children}</div>
           <Footer />
         </div>
         <Scripts />

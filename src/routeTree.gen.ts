@@ -9,12 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as FindSchoolsRouteImport } from './routes/FindSchools'
+import { Route as R404RouteImport } from './routes/404'
 import { Route as IndexRouteImport } from './routes/index'
 
-const FindSchoolsRoute = FindSchoolsRouteImport.update({
-  id: '/FindSchools',
-  path: '/FindSchools',
+const R404Route = R404RouteImport.update({
+  id: '/404',
+  path: '/404',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,37 +25,37 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/FindSchools': typeof FindSchoolsRoute
+  '/404': typeof R404Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/FindSchools': typeof FindSchoolsRoute
+  '/404': typeof R404Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/FindSchools': typeof FindSchoolsRoute
+  '/404': typeof R404Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/FindSchools'
+  fullPaths: '/' | '/404'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/FindSchools'
-  id: '__root__' | '/' | '/FindSchools'
+  to: '/' | '/404'
+  id: '__root__' | '/' | '/404'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  FindSchoolsRoute: typeof FindSchoolsRoute
+  R404Route: typeof R404Route
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/FindSchools': {
-      id: '/FindSchools'
-      path: '/FindSchools'
-      fullPath: '/FindSchools'
-      preLoaderRoute: typeof FindSchoolsRouteImport
+    '/404': {
+      id: '/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof R404RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,7 +70,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  FindSchoolsRoute: FindSchoolsRoute,
+  R404Route: R404Route,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

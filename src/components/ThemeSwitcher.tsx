@@ -18,14 +18,16 @@ export default function ThemeSwitcher() {
   }
 
   return (
-    <button
-      onClick={toggleTheme}
-      className="p-2 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
-      aria-label={`Switch to next theme (current: ${theme})`}
-      title={`Current theme: ${theme}`}
-    >
-      {getIcon()}
-    </button>
+    <div className="absolute top-0 right-0 flex justify-end items-center gap-4">
+      <button
+        onClick={toggleTheme}
+        className="p-1 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
+        aria-label={`Switch to next theme (current: ${theme})`}
+        title={`Current theme: ${theme}`}
+      >
+        {getIcon()}
+      </button>
+    </div>
   )
 }
 

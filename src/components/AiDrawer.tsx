@@ -115,7 +115,7 @@ export default function AiDrawer({
                     ? `Ask about ${schoolName}`
                     : 'Ask about this school...'
                 }
-                className="w-full border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                className="w-full border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 line-clamp-1"
               />
               <button
                 type="submit"
