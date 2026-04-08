@@ -5,7 +5,6 @@ import {
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 import * as React from 'react'
-import { Analytics } from '@vercel/analytics/next'
 import NotFoundPage from './404'
 import type { QueryClient } from '@tanstack/react-query'
 import appCss from '~/styles/app.css?url'
@@ -104,7 +103,6 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
       </head>
       <body className="md:h-screen md:overflow-hidden">
         <div className="flex flex-col md:h-full">
-          <Analytics />
           <ThemeSwitcher />
           <div className="flex flex-1 overflow-hidden">{children}</div>
           <Footer />
