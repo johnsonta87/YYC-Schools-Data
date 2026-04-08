@@ -87,7 +87,7 @@ export default function AiDrawer({
           <div className="mb-4 flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                Ask AI about {schoolName || 'the selected school'}
+                Ask AI
               </h3>
             </div>
             <button
@@ -142,33 +142,31 @@ export default function AiDrawer({
             <div ref={messagesEndRef} />
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="pt-4 dark:border-slate-800"
-          >
+          <form onSubmit={handleSubmit} className="pt-4 dark:border-slate-800">
             <div className="flex items-center gap-2">
               <input
                 type="text"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
                 disabled={isSubmitting || !schoolName}
-                placeholder={
-                  schoolName
-                    ? `Ask about ${schoolName}`
-                    : 'Ask about this school...'
-                }
+                placeholder="Type your question here..."
                 className="w-full border border-slate-300 bg-white px-3 py-2 text-slate-900 outline-none focus:border-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 line-clamp-1"
               />
               <button
                 type="submit"
                 disabled={!prompt.trim() || isSubmitting || !schoolName}
                 className="bg-blue-700 hover:bg-blue-600 p-2 text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Submit prompt"
-                title="Submit"
+                aria-label="Send question"
+                title="Send"
               >
                 <Send size={18} />
               </button>
             </div>
+
+            <p className="text-xs text-gray-400 dark:text-gray-600 mt-4">
+              This is an AI-generated response and may not be completely accurate. Please verify important
+              information independently.
+            </p>
           </form>
         </aside>
       </div>
