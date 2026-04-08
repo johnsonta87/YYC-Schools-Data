@@ -344,12 +344,19 @@ export function SchoolsList({
   return (
     <div className="mt-8 space-y-4">
       <p className="text-sm text-slate-600 dark:text-slate-300">
-        Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, schools.length)} of {schools.length} schools
+        Showing {startIndex + 1}-
+        {Math.min(startIndex + ITEMS_PER_PAGE, schools.length)} of{' '}
+        {schools.length} schools
       </p>
 
       <ul className="grid gap-4 lg:grid-cols-2">
         {paginatedSchools.map((school) => (
-          <SchoolItem key={school.id} {...school} onAskAi={onAskAi} onViewMap={onViewMap} />
+          <SchoolItem
+            key={school.id}
+            {...school}
+            onAskAi={onAskAi}
+            onViewMap={onViewMap}
+          />
         ))}
       </ul>
 
@@ -359,7 +366,7 @@ export function SchoolsList({
             type="button"
             onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
             disabled={safePage === 1}
-            className="border border-slate-300 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700"
+            className="border border-slate-300 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-blue-700"
           >
             Previous
           </button>
@@ -370,9 +377,11 @@ export function SchoolsList({
 
           <button
             type="button"
-            onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+            onClick={() =>
+              setCurrentPage((page) => Math.min(totalPages, page + 1))
+            }
             disabled={safePage === totalPages}
-            className="border border-slate-300 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700"
+            className="border border-slate-300 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 hover:bg-gray-100 dark:hover:bg-blue-700"
           >
             Next
           </button>

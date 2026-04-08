@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useAction } from 'convex/react'
 import { useMemo, useState } from 'react'
+import type { Message } from '~/components/AiDrawer.tsx'
 import { api } from '../../convex/_generated/api'
 import type {FilterOptions, SchoolItem} from '~/components/SchoolsList.tsx';
 import { SchoolsList } from '~/components/SchoolsList.tsx'
@@ -13,9 +14,6 @@ export const Route = createFileRoute('/')({
   component: Home,
 })
 
-function getInitialAiOutput(): string {
-  return 'Select a school to ask school-specific questions.'
-}
 
 function Home() {
     const askSchool = useAction(api.askSchool.askSchool)
@@ -24,9 +22,7 @@ function Home() {
     const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false)
     const [isMapDrawerOpen, setIsMapDrawerOpen] = useState(false)
     const [activeSchool, setActiveSchool] = useState<SchoolItem | null>(null)
-    const [aiOutputText, setAiOutputText] = useState(
-      'Select a school to ask school-specific questions.',
-    )
+    const [aiMessages, setAiMessages] = useState<Array<Message>>([])
     const [aiError, setAiError] = useState<string | null>(null)
     const [isAiLoading, setIsAiLoading] = useState(false)
 
@@ -35,7 +31,7 @@ function Home() {
       setIsAiDrawerOpen(true)
       setAiError(null)
       setIsAiLoading(false)
-      setAiOutputText(getInitialAiOutput())
+      setAiMessages([])
     }
 
     const handleCloseAiDrawer = () => {
@@ -61,6 +57,9 @@ function Home() {
       setAiError(null)
       setIsAiLoading(true)
 
+      // Add user message to conversation
+      setAiMessages((prev) => [...prev, { role: 'user', content: prompt }])
+
       const schoolPayload = {
         id: activeSchool.id,
         name: activeSchool.name,
@@ -83,7 +82,8 @@ function Home() {
           school: schoolPayload,
         })
 
-        setAiOutputText(result.answer)
+        // Add assistant message to conversation
+        setAiMessages((prev) => [...prev, { role: 'assistant', content: result.answer }])
       } catch (submissionError) {
         setAiError(
           submissionError instanceof Error
@@ -133,7 +133,7 @@ function Home() {
         <AiDrawer
           isOpen={isAiDrawerOpen}
           schoolName={activeSchool?.name}
-          outputText={aiOutputText}
+          messages={aiMessages}
           errorText={aiError}
           isSubmitting={isAiLoading}
           onSubmitPrompt={handleSubmitPrompt}
