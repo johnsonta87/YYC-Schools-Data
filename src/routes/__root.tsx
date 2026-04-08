@@ -5,12 +5,12 @@ import {
   createRootRouteWithContext,
 } from '@tanstack/react-router'
 import * as React from 'react'
+import { Analytics } from '@vercel/analytics/next'
 import NotFoundPage from './404'
 import type { QueryClient } from '@tanstack/react-query'
 import appCss from '~/styles/app.css?url'
 import Footer from '~/components/Footer.tsx'
 import ThemeSwitcher from '~/components/ThemeSwitcher.tsx'
-import { Analytics } from '@vercel/analytics/next'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
