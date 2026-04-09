@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import SchoolItem from './SchoolItem'
 
 export interface FilterOptions {
+  schoolName?: string
   board?: string
   grades?: Array<string>
   city?: string
@@ -283,6 +284,12 @@ export function SchoolsList({
     const allSchools = mapSchools(data)
 
     return allSchools.filter((school) => {
+      if (filters.schoolName) {
+        const schoolNameQuery = filters.schoolName.trim().toLowerCase()
+        if (schoolNameQuery && !school.name.toLowerCase().includes(schoolNameQuery)) {
+          return false
+        }
+      }
       if (filters.board && school.board !== filters.board) {
         return false
       }

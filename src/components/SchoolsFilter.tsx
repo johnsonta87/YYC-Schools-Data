@@ -1,10 +1,5 @@
 import { useState } from 'react'
-
-export interface FilterOptions {
-  board?: string
-  grades?: Array<string>
-  quadrant?: string
-}
+import type { FilterOptions } from '~/components/SchoolsList.tsx'
 
 interface SchoolsFilterProps {
   readonly onFilterChange: (filters: FilterOptions) => void
@@ -19,6 +14,7 @@ export function SchoolsFilter({
   boards = [],
 }: SchoolsFilterProps) {
   const [filters, setFilters] = useState<FilterOptions>({
+    schoolName: '',
     board: '',
     grades: [],
     quadrant: '',
@@ -41,12 +37,13 @@ export function SchoolsFilter({
   }
 
   const resetFilters = () => {
-    const emptyFilters: FilterOptions = { board: '', grades: [], quadrant: '' }
+    const emptyFilters: FilterOptions = { schoolName: '', board: '', grades: [], quadrant: '' }
     setFilters(emptyFilters)
     onFilterChange(emptyFilters)
   }
 
-  const hasActiveFilters = filters.board || (filters.grades && filters.grades.length > 0) || filters.quadrant
+  const hasActiveFilters =
+    filters.schoolName || filters.board || (filters.grades && filters.grades.length > 0) || filters.quadrant
 
   return (
     <aside className="flex mb-4 md:mb-0 md:h-screen w-full md:w-72 flex-col gap-6 border border-slate-200 bg-gray-100 dark:bg-gray-900 p-4 md:p-8 dark:border-slate-800">
@@ -56,6 +53,21 @@ export function SchoolsFilter({
 
       <div className="flex flex-col gap-4 overflow-y-auto">
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">Filters</h2>
+        {/* School Name Filter */}
+        <div className="flex flex-col gap-2">
+          <label htmlFor="school-name-filter" className="text-sm font-medium text-slate-700 dark:text-slate-200">
+            School Name
+          </label>
+          <input
+            id="school-name-filter"
+            type="text"
+            value={filters.schoolName || ''}
+            onChange={(e) => handleFilterChange('schoolName', e.target.value)}
+            placeholder="Search by school name"
+            className="border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-50 dark:placeholder-slate-500"
+          />
+        </div>
+
         {/* Board Filter */}
         <div className="flex flex-col gap-2">
           <label htmlFor="board-filter" className="text-sm font-medium text-slate-700 dark:text-slate-200">
